@@ -23,6 +23,7 @@ import pypkjs.javascript.runtime
 from .pebble_manager import PebbleManager
 from pypkjs.timeline import PebbleTimeline
 from pypkjs.timeline.urls import URLManager
+from pypkjs.weather import PebbleWeather
 
 
 class Runner(object):
@@ -45,6 +46,7 @@ class Runner(object):
         self.js = None
         self.urls = URLManager()
         self.timeline = PebbleTimeline(self, persist=persist_dir, oauth=oauth_token, layout_file=layout_file)
+        self.weather = PebbleWeather(self)
         self.block_private_addresses = block_private_addresses
         self.load_cached_pbws()
         self.load_pbws(pbws)
@@ -122,6 +124,7 @@ class Runner(object):
         greenlet = self.pebble.connect()
         # continuous_sync() deliberately NOT enabled -- the remote server is dead.
         self.timeline.do_maintenance()
+        self.weather.start()
         greenlet.join()
 
     @property
